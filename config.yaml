@@ -25,23 +25,15 @@ projects:
 
 experience:
   - period: Now
-    role: Platform & SRE focus
-    detail: Designing reliable delivery paths, observable services, and operational tooling that teams can actually use.
-
-  - period: Earlier
-    role: Data platform work
-    detail: Building dependable pipelines, data quality controls, and shared infrastructure for analytics workloads.
-
-  - period: Foundation
-    role: Systems & automation
-    detail: Turning repetitive operations into tested code, clear runbooks, and safer defaults.
+    role: Data Engineer
+    detail: Data Engineer at Bi3 Technologies responsible for managing data pipelines across different cloud environments.
 
 contact:
-  email: hello@kabil.dev
-  linkedin: https://www.linkedin.com
+  email: me@kubewithcoffee.xyz
+  linkedin: https://www.linkedin.com/in/kabil-m-1519202b8/
 
 site:
-  url: http://localhost:3000
+  url: https://me.kubewithcoffee.xyz
 
 admin:
   publicKeys:
@@ -57,5 +49,5 @@ admin:
         -----END PUBLIC KEY-----
 
 newsletter:
-  from: Kabil <newsletter@example.com>
-  ownerEmail: hello@kabil.dev
+  from: Kabil <newsletter@kubewithcoffee.xyz>
+  ownerEmail: me@kubewithcoffee.xyz
