@@ -1,0 +1,37 @@
+projects:
+  - title: Lakehouse Control Room
+    description: A monitored batch + streaming platform with schema checks, lineage, retries, and storage tables that do not surprise operators.
+    outcome: Spark jobs, Iceberg tables, dbt contracts, Kafka/Flink paths
+    tags: [Spark, Iceberg, dbt, Kafka, Flink]
+    tone: gold
+
+  - title: Kubernetes Reliability Kit
+    description: "Guardrails for safer releases: network policy, GitOps delivery, certificate automation, admission control, and rollback-ready defaults."
+    outcome: Boring deploys, clear ownership, fewer risky rollouts
+    tags: [K8s, Cilium, Calico, Argo CD, cert-manager]
+    tone: blue
+
+  - title: Policy + Platform Baseline
+    description: "Cluster and service defaults that catch bad changes before production: identity, permissions, constraints, and documented escape hatches."
+    outcome: OPA/Kyverno checks with PostgreSQL-backed platform services
+    tags: [OPA, Kyverno, PostgreSQL, Terraform]
+    tone: coral
+
+  - title: Observability Command Center
+    description: One operational view for logs, metrics, traces, SLOs, and the context an on-call engineer needs first.
+    outcome: Prometheus, Grafana, OpenTelemetry, and Jaeger in one story
+    tags: [Prometheus, Grafana, OTel, Jaeger]
+    tone: green
+
+experience:
+  - period: Now
+    role: Platform & SRE focus
+    detail: Designing reliable delivery paths, observable services, and operational tooling that teams can actually use.
+
+  - period: Earlier
+    role: Data platform work
+    detail: Building dependable pipelines, data quality controls, and shared infrastructure for analytics workloads.
+
+  - period: Foundation
+    role: Systems & automation
+    detail: Turning repetitive operations into tested code, clear runbooks, and safer defaults.

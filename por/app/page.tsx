@@ -1,0 +1,355 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
+import Image from "next/image";
+import { parse } from "yaml";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import {
+  DatabaseBlock,
+  PagerBird,
+  PipelineBot,
+  TerminalBuddy,
+} from "@/components/mascots";
+
+type PortfolioConfig = {
+  projects: Array<{
+    title: string;
+    description: string;
+    outcome: string;
+    tags: string[];
+    tone: string;
+  }>;
+  experience: Array<{ period: string; role: string; detail: string }>;
+};
+
+const { projects, experience } = parse(
+  readFileSync(path.join(process.cwd(), "config.yaml"), "utf8"),
+) as PortfolioConfig;
+
+const toolMascots = [
+  { name: "Spark", kind: "data" },
+  { name: "Iceberg", kind: "data" },
+  { name: "dbt", kind: "data" },
+  { name: "Kafka", kind: "data" },
+  { name: "Flink", kind: "data" },
+  { name: "K8s", kind: "cluster" },
+  { name: "Cilium", kind: "cluster" },
+  { name: "Calico", kind: "cluster" },
+  { name: "Argo CD", kind: "cluster" },
+  { name: "cert-manager", kind: "cluster" },
+  { name: "PostgreSQL", kind: "policy" },
+  { name: "OPA", kind: "policy" },
+  { name: "Kyverno", kind: "policy" },
+  { name: "Terraform", kind: "policy" },
+  { name: "Prometheus", kind: "signal" },
+  { name: "Grafana", kind: "signal" },
+  { name: "OTel", kind: "signal" },
+  { name: "Jaeger", kind: "signal" },
+] as const;
+
+const tickerItems = toolMascots.map((tool) => tool.name);
+const heroTools = toolMascots.filter((tool) =>
+  [
+    "Spark",
+    "Iceberg",
+    "Kafka",
+    "K8s",
+    "Argo CD",
+    "Prometheus",
+    "Grafana",
+    "OTel",
+  ].includes(tool.name),
+);
+type ToolMascot = (typeof toolMascots)[number];
+
+const toolLogos: Record<ToolMascot["name"], string> = {
+  Spark: "/logos/spark.svg",
+  Iceberg: "/logos/iceberg.jpg",
+  dbt: "/logos/dbt.webp",
+  Kafka: "/logos/kafka.svg",
+  Flink: "/logos/flink.svg",
+  K8s: "/logos/kubernetes.svg",
+  Cilium: "/logos/cilium.svg",
+  Calico: "/logos/calico.svg",
+  "Argo CD": "/logos/argo.svg",
+  "cert-manager": "/logos/cert-manager.svg",
+  PostgreSQL: "/logos/postgresql.svg",
+  OPA: "/logos/opa.svg",
+  Kyverno: "/logos/kyverno.svg",
+  Terraform: "/logos/terraform.svg",
+  Prometheus: "/logos/prometheus.svg",
+  Grafana: "/logos/grafana.svg",
+  OTel: "/logos/otel.svg",
+  Jaeger: "/logos/jaeger.svg",
+};
+
+function ToolMascotBadge({ tool }: { tool: ToolMascot }) {
+  return (
+    <li className="tool-mascot" data-kind={tool.kind}>
+      <Image
+        className="tool-logo"
+        src={toolLogos[tool.name]}
+        alt=""
+        width={42}
+        height={42}
+        aria-hidden="true"
+      />
+      <span className="tool-name">{tool.name}</span>
+    </li>
+  );
+}
+
+export default function Home() {
+  return (
+    <main>
+      <a className="skip-link" href="#content">
+        Skip to content
+      </a>
+
+      <header className="site-header">
+        <a className="brand" href="#top" aria-label="Kabil, back to top">
+          KABIL.SYS
+        </a>
+        <nav aria-label="Primary navigation">
+          <ul className="nav-list">
+            <li>
+              <a href="#projects">Projects</a>
+            </li>
+            <li>
+              <a href="#about">About</a>
+            </li>
+            <li>
+              <a href="#skills">Skills</a>
+            </li>
+            <li>
+              <Button asChild size="sm" variant="secondary">
+                <a href="#contact">Contact</a>
+              </Button>
+            </li>
+          </ul>
+        </nav>
+      </header>
+
+      <div id="content">
+        <section className="hero" id="top" aria-labelledby="hero-title">
+          <div className="hero-copy">
+            <Badge variant="outline">● Available for platform problems</Badge>
+            <h1 id="hero-title">I KEEP DATA MOVING AND SYSTEMS CALM.</h1>
+            <p className="hero-intro">
+              I&apos;m Kabil, a data and platform engineer focused on reliable
+              pipelines, observable infrastructure, and fewer 3 a.m. surprises.
+            </p>
+            <div className="button-row">
+              <Button asChild size="lg">
+                <a href="#projects">View projects</a>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <a href="#contact">Contact</a>
+              </Button>
+            </div>
+            <p className="availability">
+              <span aria-hidden="true" /> SYSTEM STATUS: READY TO COLLABORATE
+            </p>
+          </div>
+
+          <div className="hero-visual">
+            <div className="hero-dashboard-wrap">
+              <TerminalBuddy className="terminal-buddy" />
+              <ul
+                className="hero-tool-rack"
+                aria-label="Core data and platform tools"
+              >
+                {heroTools.map((tool) => (
+                  <ToolMascotBadge key={tool.name} tool={tool} />
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <div className="ticker" aria-label="Core practice areas">
+          <ul>
+            {[...tickerItems, ...tickerItems].map((item, index) => (
+              <li
+                key={`${item}-${index}`}
+                aria-hidden={index >= tickerItems.length}
+              >
+                {item} <span aria-hidden="true">◆</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <section
+          className="projects section-shell"
+          id="projects"
+          aria-labelledby="projects-title"
+        >
+          <div className="section-heading project-heading">
+            <div>
+              <h2 id="projects-title">Systems built for the messy middle.</h2>
+              <p>
+                Data engines, cluster controls, policy gates, and observability
+                wired together without losing human operators.
+              </p>
+            </div>
+            <PipelineBot className="pipeline-bot" />
+          </div>
+
+          <div className="project-grid">
+            {projects.map((project) => (
+              <article className="project-grid-item" key={project.title}>
+                <Card className="project-card" data-tone={project.tone}>
+                  <CardHeader>
+                    <CardTitle>
+                      <h3>{project.title}</h3>
+                    </CardTitle>
+                    <CardDescription>{project.description}</CardDescription>
+                    <CardAction>
+                      <Badge variant="outline">Case study</Badge>
+                    </CardAction>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="outcome">{project.outcome}</p>
+                    <ul
+                      className="mini-tool-list"
+                      aria-label={`${project.title} technologies`}
+                    >
+                      {project.tags.map((tag) => {
+                        const tool = toolMascots.find(
+                          (item) => item.name === tag,
+                        );
+                        return tool ? (
+                          <ToolMascotBadge key={tag} tool={tool} />
+                        ) : (
+                          <li key={tag}>
+                            <Badge variant="secondary">{tag}</Badge>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </CardContent>
+                  <CardFooter>
+                    <Button asChild variant="outline" size="sm">
+                      <a
+                        href="#contact"
+                        aria-label={`Discuss ${project.title}`}
+                      >
+                        Discuss project
+                      </a>
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <Separator />
+
+        <section
+          className="about section-shell"
+          id="about"
+          aria-labelledby="about-title"
+        >
+          <div className="about-copy">
+            <h2 id="about-title">Reliability is a team sport.</h2>
+            <p className="about-lede">
+              I work where data platforms meet production reality. My job is to
+              make the safe path the easy path—then document it so nobody needs
+              a guided tour.
+            </p>
+            <blockquote>
+              “Good infrastructure should explain itself before the pager has
+              to.”
+            </blockquote>
+          </div>
+
+          <div className="experience-panel">
+            <h3>Experience</h3>
+            <ol className="experience-list">
+              {experience.map((item) => (
+                <li key={item.period}>
+                  <p className="experience-period">{item.period}</p>
+                  <div>
+                    <h4>{item.role}</h4>
+                    <p>{item.detail}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        <section
+          className="skills section-shell"
+          id="skills"
+          aria-labelledby="skills-title"
+        >
+          <div className="skills-mascot-panel">
+            <DatabaseBlock className="database-block" />
+            <p>PATTERNS ALIGNED WITH BUSINESS IMPACT.</p>
+          </div>
+          <div className="skills-content">
+            <h2 id="skills-title">A practical operations toolbox.</h2>
+            <ul className="tool-wall" aria-label="Tool mascot wall">
+              {toolMascots.map((tool) => (
+                <ToolMascotBadge key={tool.name} tool={tool} />
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section
+          className="contact section-shell"
+          id="contact"
+          aria-labelledby="contact-title"
+        >
+          <div className="contact-copy">
+            <h2 id="contact-title">Bring me the noisy system.</h2>
+            <p>
+              Have a platform that needs calmer alerts, safer delivery, or a
+              data pipeline people can trust? Send the context. I&apos;ll bring
+              a plan.
+            </p>
+            <div className="button-row">
+              <Button asChild size="lg" variant="secondary">
+                <a href="mailto:hello@kabil.dev">Email Kabil</a>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <a
+                  href="https://www.linkedin.com"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  View LinkedIn
+                </a>
+              </Button>
+            </div>
+            <p className="response-note">
+              Typical response time: within two working days.
+            </p>
+          </div>
+          <PagerBird className="pager-bird" />
+        </section>
+      </div>
+
+      <footer>
+        <p>© {new Date().getFullYear()} Kabil. Built for useful uptime.</p>
+        <a href="#top">Back to top</a>
+      </footer>
+    </main>
+  );
+}
