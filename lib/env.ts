@@ -29,3 +29,7 @@ export function resendEnv() {
     webhookSecret: required("RESEND_WEBHOOK_SECRET"),
   };
 }
+
+export function keepaliveEnv() {
+  return { secret: secret("KEEPALIVE_SECRET") };
+}

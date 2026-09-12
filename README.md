@@ -75,6 +75,8 @@ Article browser beacon stores daily aggregate views, daily HMAC-deduplicated vis
 
 Use any Vercel-reachable PostgreSQL provider and set all `.env.example` variables in project settings. Run migrations and blog import once against production `DATABASE_URL` before traffic. Set `SITE_URL` to canonical HTTPS origin.
 
+`.github/workflows/aiven-keepalive.yml` calls the authenticated database health endpoint hourly. Set the same `KEEPALIVE_SECRET` in Vercel and GitHub Actions, plus `KEEPALIVE_URL` in GitHub Actions to the production origin. This is best-effort for Aiven Free Tier; use a paid tier when guaranteed uptime matters.
+
 ### Self-hosted Node
 
 Run PostgreSQL through included Compose service or point `DATABASE_URL` at another PostgreSQL instance, then:
@@ -92,7 +94,7 @@ Terminate TLS at reverse proxy and forward original host/protocol headers. Admin
 
 ```bash
 npm test
-npx eslint app components lib scripts --ignore-pattern 'por/**'
+npm run lint
 npx tsc --noEmit
 npm run build
 ```

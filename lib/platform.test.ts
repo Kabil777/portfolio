@@ -7,6 +7,7 @@ import { createElement } from "react";
 import { shouldShowNewsletter } from "@/components/blog/newsletter-signup";
 import { PostEmail } from "@/components/email/post-email";
 import { POST as recordView } from "@/app/api/analytics/view/route";
+import { GET as checkHealth } from "@/app/api/health/route";
 import { POST as toggleLike } from "@/app/api/likes/route";
 import { POST as resendWebhook } from "@/app/api/resend/webhook/route";
 import { issueAdminChallenge, verifyAdminChallenge } from "@/lib/admin-auth";
@@ -34,6 +35,8 @@ process.env.SESSION_SECRET ??=
   "test-session-secret-with-at-least-32-characters";
 process.env.ANALYTICS_SECRET ??=
   "test-analytics-secret-with-at-least-32-characters";
+process.env.KEEPALIVE_SECRET ??=
+  "test-keepalive-secret-with-at-least-32-characters";
 process.env.RESEND_API_KEY ??= "re_test";
 process.env.RESEND_SEGMENT_ID ??= "test-segment";
 process.env.RESEND_WEBHOOK_SECRET ??= "whsec_dGVzdHNlY3JldHRlc3RzZWNyZXQ=";
@@ -243,6 +246,23 @@ test("campaign email includes a prose excerpt and web CTA", async () => {
   assert.match(html, /href="https:\/\/example.com\/runbook"/);
   assert.match(html, /RESEND_UNSUBSCRIBE_URL/);
   assert.equal(normalizeEmail(" Test@Example.COM "), "test@example.com");
+});
+
+test("database health endpoint requires its keepalive secret", async () => {
+  const unauthorized = await checkHealth(
+    new Request("http://localhost:3000/api/health"),
+  );
+  assert.equal(unauthorized.status, 401);
+
+  const authorized = await checkHealth(
+    new Request("http://localhost:3000/api/health", {
+      headers: {
+        Authorization: `Bearer ${process.env.KEEPALIVE_SECRET}`,
+      },
+    }),
+  );
+  assert.equal(authorized.status, 200);
+  assert.deepEqual(await authorized.json(), { ok: true });
 });
 
 test("rate limiting rejects requests beyond the configured bucket", async () => {
