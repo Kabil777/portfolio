@@ -244,7 +244,7 @@ export default async function Home() {
               <p>Ideas on data systems, Kubernetes, and reliable platforms.</p>
             </div>
             <Button asChild variant="outline">
-              <Link href="/blog">View all writing</Link>
+              <Link href="/blog" prefetch={false}>View all writing</Link>
             </Button>
           </div>
           <div className="home-blog-grid">

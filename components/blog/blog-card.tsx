@@ -13,7 +13,7 @@ const dateFormatter = new Intl.DateTimeFormat("en", {
 
 export function BlogCard({ post }: { post: BlogPostMeta }) {
   return (
-    <Link className="blog-card-link" href={`/blog/${post.slug}`}>
+    <Link className="blog-card-link" href={`/blog/${post.slug}`} prefetch={false}>
       <Card className="blog-card">
         <div className="blog-card-copy">
           <p className="blog-card-meta">

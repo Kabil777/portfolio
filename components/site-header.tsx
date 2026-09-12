@@ -23,7 +23,7 @@ export function SiteHeader() {
               <Link href="/#skills">Skills</Link>
             </li>
             <li>
-              <Link href="/blog">Blog</Link>
+              <Link href="/blog" prefetch={false}>Blog</Link>
             </li>
             <li>
               <Button asChild size="sm" variant="secondary">

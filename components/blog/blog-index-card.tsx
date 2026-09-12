@@ -12,7 +12,7 @@ const dateFormatter = new Intl.DateTimeFormat("en", {
 
 export function BlogIndexCard({ post }: { post: BlogPostMeta }) {
   return (
-    <Link className="blog-index-card" href={`/blog/${post.slug}`}>
+    <Link className="blog-index-card" href={`/blog/${post.slug}`} prefetch={false}>
       {post.cover ? (
         <Image
           alt=""
