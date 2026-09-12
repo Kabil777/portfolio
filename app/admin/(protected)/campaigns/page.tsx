@@ -52,6 +52,7 @@ export default async function AdminCampaignsPage() {
                                     <td>
                                         <Link
                                             href={`/admin/campaigns/${campaign.slug}`}
+                                            prefetch={false}
                                         >
                                             {campaign.campaignStatus
                                                 ? "View"

@@ -17,14 +17,14 @@ export default async function AdminLayout({
         Skip to admin content
       </a>
       <header className="admin-header">
-        <Link className="admin-brand" href="/admin">
+        <Link className="admin-brand" href="/admin" prefetch={false}>
           KABIL
         </Link>
         <nav aria-label="Admin navigation">
-          <Link href="/admin">Dashboard</Link>
-          <Link href="/admin/posts">Posts</Link>
-          <Link href="/admin/subscribers">Subscribers</Link>
-          <Link href="/admin/campaigns">Newsletter</Link>
+          <Link href="/admin" prefetch={false}>Dashboard</Link>
+          <Link href="/admin/posts" prefetch={false}>Posts</Link>
+          <Link href="/admin/subscribers" prefetch={false}>Subscribers</Link>
+          <Link href="/admin/campaigns" prefetch={false}>Newsletter</Link>
         </nav>
         <form action="/api/admin-auth/logout" method="post">
           <button type="submit">Log out</button>

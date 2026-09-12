@@ -33,6 +33,7 @@ export default async function AdminDashboardPage({
               aria-current={days === range ? "page" : undefined}
               href={`/admin?range=${range}`}
               key={range}
+              prefetch={false}
             >
               {range} days
             </Link>
@@ -73,7 +74,7 @@ export default async function AdminDashboardPage({
             <ol className="admin-ranked-list">
               {dashboard.topPosts.map((post) => (
                 <li key={post.slug}>
-                  <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                  <Link href={`/blog/${post.slug}`} prefetch={false}>{post.title}</Link>
                   <span>
                     {post.views} views / {post.uniqueVisitors} unique
                   </span>
