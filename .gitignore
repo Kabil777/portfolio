@@ -25,6 +25,8 @@
 .DS_Store
 *.pem
 /admin-keys/
+/por/
+/portfolio.zip
 
 # debug
 npm-debug.log*
