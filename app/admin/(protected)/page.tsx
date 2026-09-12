@@ -74,7 +74,9 @@ export default async function AdminDashboardPage({
             <ol className="admin-ranked-list">
               {dashboard.topPosts.map((post) => (
                 <li key={post.slug}>
-                  <Link href={`/blog/${post.slug}`} prefetch={false}>{post.title}</Link>
+                  <Link href={`/blog/${post.slug}`} prefetch={false}>
+                    {post.title}
+                  </Link>
                   <span>
                     {post.views} views / {post.uniqueVisitors} unique
                   </span>

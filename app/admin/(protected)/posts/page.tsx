@@ -11,7 +11,11 @@ export default async function AdminPostsPage() {
           <p className="admin-kicker">PUBLISHING</p>
           <h1 id="posts-title">Posts.</h1>
         </div>
-        <Link className="admin-button" href="/admin/posts/upload" prefetch={false}>
+        <Link
+          className="admin-button"
+          href="/admin/posts/upload"
+          prefetch={false}
+        >
           Upload Markdown
         </Link>
       </div>
@@ -50,7 +54,10 @@ export default async function AdminPostsPage() {
                     })}
                   </td>
                   <td>
-                    <Link href={`/admin/posts/${post.slug}/preview`} prefetch={false}>
+                    <Link
+                      href={`/admin/posts/${post.slug}/preview`}
+                      prefetch={false}
+                    >
                       Preview
                     </Link>
                   </td>

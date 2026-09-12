@@ -21,10 +21,18 @@ export default async function AdminLayout({
           KABIL
         </Link>
         <nav aria-label="Admin navigation">
-          <Link href="/admin" prefetch={false}>Dashboard</Link>
-          <Link href="/admin/posts" prefetch={false}>Posts</Link>
-          <Link href="/admin/subscribers" prefetch={false}>Subscribers</Link>
-          <Link href="/admin/campaigns" prefetch={false}>Newsletter</Link>
+          <Link href="/admin" prefetch={false}>
+            Dashboard
+          </Link>
+          <Link href="/admin/posts" prefetch={false}>
+            Posts
+          </Link>
+          <Link href="/admin/subscribers" prefetch={false}>
+            Subscribers
+          </Link>
+          <Link href="/admin/campaigns" prefetch={false}>
+            Newsletter
+          </Link>
         </nav>
         <form action="/api/admin-auth/logout" method="post">
           <button type="submit">Log out</button>
