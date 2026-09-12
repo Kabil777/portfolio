@@ -2087,6 +2087,10 @@ footer a {
   font-size: 1.6rem;
 }
 
+.newsletter-confirm form {
+  margin: 1.5rem 0;
+}
+
 .admin-shell,
 .admin-login-page {
   min-height: 100vh;
