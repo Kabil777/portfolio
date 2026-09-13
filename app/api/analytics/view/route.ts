@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     "unknown";
   const visitorHash = analyticsHash(
     `${address}\0${request.headers.get("user-agent") ?? "unknown"}\0${day}`,
-    `daily-visitor:${body.slug}`,
+    "daily-visitor",
   );
   const referrer = referrerHost(body.referrer, request.nextUrl.host);
   const sql = getDatabase();

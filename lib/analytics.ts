@@ -25,10 +25,15 @@ export async function getAnalyticsDashboard(
   const [traffic, engagement, trend, topPosts, referrers, latestCampaigns] =
     await Promise.all([
       sql<Array<{ views: number; unique_visitors: number }>>`
-      SELECT COALESCE(sum(views), 0)::int AS views,
-             COALESCE(sum(unique_visitors), 0)::int AS unique_visitors
-      FROM post_daily_stats
-      WHERE day >= current_date - (${days}::int - 1)
+      SELECT
+        (SELECT COALESCE(sum(views), 0)::int
+         FROM post_daily_stats
+         WHERE day >= current_date - (${days}::int - 1)) AS views,
+        (SELECT count(*)::int FROM (
+           SELECT DISTINCT day, visitor_hash
+           FROM post_daily_visitors
+           WHERE day >= current_date - (${days}::int - 1)
+         ) visitors) AS unique_visitors
     `,
       sql<Array<{ likes: number; subscribers: number }>>`
       SELECT
@@ -38,14 +43,18 @@ export async function getAnalyticsDashboard(
       sql<Array<{ day: Date; views: number; unique_visitors: number }>>`
       SELECT series.day,
              COALESCE(stats.views, 0)::int AS views,
-             COALESCE(stats.unique_visitors, 0)::int AS unique_visitors
+             COALESCE(visitors.unique_visitors, 0)::int AS unique_visitors
       FROM generate_series(
         current_date - (${days}::int - 1), current_date, interval '1 day'
       ) AS series(day)
       LEFT JOIN (
-        SELECT day, sum(views) AS views, sum(unique_visitors) AS unique_visitors
+        SELECT day, sum(views) AS views
         FROM post_daily_stats GROUP BY day
       ) stats ON stats.day = series.day
+      LEFT JOIN (
+        SELECT day, count(DISTINCT visitor_hash) AS unique_visitors
+        FROM post_daily_visitors GROUP BY day
+      ) visitors ON visitors.day = series.day
       ORDER BY series.day
     `,
       sql<

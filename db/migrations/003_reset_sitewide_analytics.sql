@@ -1,0 +1,1 @@
+TRUNCATE post_referrer_daily, post_daily_stats, post_daily_visitors;

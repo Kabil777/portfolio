@@ -42,6 +42,7 @@ process.env.RESEND_SEGMENT_ID ??= "test-segment";
 process.env.RESEND_WEBHOOK_SECRET ??= "whsec_dGVzdHNlY3JldHRlc3RzZWNyZXQ=";
 
 const slug = "platform-integration-check";
+const secondSlug = "second-platform-integration-check";
 const subscriberEmail = "platform-check@example.com";
 const expiredSubscriberEmail = "expired-platform-check@example.com";
 const source = `---
@@ -101,7 +102,7 @@ after(async () => {
     await sql`DELETE FROM campaigns WHERE post_slug = ${slug}`;
     await sql`DELETE FROM subscribers WHERE email IN (${subscriberEmail}, ${expiredSubscriberEmail})`;
     await sql`DELETE FROM rate_limits WHERE action = 'platform-check'`;
-    await sql`DELETE FROM posts WHERE slug = ${slug}`;
+    await sql`DELETE FROM posts WHERE slug IN (${slug}, ${secondSlug})`;
   } finally {
     await closeDatabase();
   }
@@ -158,7 +159,10 @@ test("draft promotion preserves published content until explicit publish", async
   assert.equal(await publishPost(slug), true);
 });
 
-test("analytics deduplicates daily visitors and likes toggle per browser", async () => {
+test("analytics deduplicates daily visitors across posts", async () => {
+  await savePostDraft(`${secondSlug}.md`, source);
+  assert.equal(await publishPost(secondSlug), true);
+
   const firstLike = await toggleLike(
     request("http://localhost:3000/api/likes", { slug }),
   );
@@ -197,6 +201,16 @@ test("analytics deduplicates daily visitors and likes toggle per browser", async
     ).status,
     204,
   );
+  assert.equal(
+    (
+      await recordView(
+        request("http://localhost:3000/api/analytics/view", {
+          slug: secondSlug,
+        }),
+      )
+    ).status,
+    204,
+  );
   const [stats] = await getDatabase()<
     Array<{ views: number; unique_visitors: number }>
   >`
@@ -204,6 +218,12 @@ test("analytics deduplicates daily visitors and likes toggle per browser", async
     WHERE post_slug = ${slug} AND day = current_date
   `;
   assert.deepEqual(stats, { views: 2, unique_visitors: 1 });
+  const [visitors] = await getDatabase()<Array<{ count: number }>>`
+    SELECT count(DISTINCT visitor_hash)::int AS count
+    FROM post_daily_visitors
+    WHERE post_slug IN (${slug}, ${secondSlug}) AND day = current_date
+  `;
+  assert.equal(visitors.count, 1);
   const [referrer] = await getDatabase()`
     SELECT referrer_host FROM post_referrer_daily WHERE post_slug = ${slug}
   `;
