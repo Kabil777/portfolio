@@ -56,10 +56,11 @@ export async function requestSubscription(
   const confirmationUrl = `${config.site.url}/newsletter/confirm?token=${encodeURIComponent(token)}`;
   const { error } = await getResend().emails.send({
     from: config.newsletter.from,
+    replyTo: config.newsletter.ownerEmail,
     to: email,
-    subject: "Confirm your subscription",
-    html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:auto"><h1>Confirm your subscription.</h1><p>One click confirms you want Kabil's new posts by email.</p><p><a href="${confirmationUrl}">Confirm subscription</a></p><p>This link expires in 24 hours. Ignore this email if you did not subscribe.</p></div>`,
-    text: `Confirm your subscription: ${confirmationUrl}\n\nThis link expires in 24 hours.`,
+    subject: "Confirm your subscription to Kabil’s newsletter",
+    html: `<!doctype html><html><body style="margin:0;background:#fff7e8;color:#111827;font-family:Arial,sans-serif"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#fff7e8"><tr><td align="center" style="padding:40px 16px"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px"><tr><td style="border:4px solid #111827;background:#daa144;padding:18px 24px;font-weight:800">KABIL’S NEWSLETTER</td></tr><tr><td style="border:4px solid #111827;border-top:0;background:#ffffff;padding:32px 24px"><h1 style="margin:0 0 16px;font-size:38px;line-height:1">Confirm it’s you.</h1><p style="margin:0 0 24px;font-size:17px;line-height:1.6">Open the confirmation page, then approve delivery of new posts to your inbox.</p><a href="${confirmationUrl}" style="display:inline-block;border:3px solid #111827;background:#dd614c;color:#111827;padding:14px 20px;font-weight:800;text-decoration:none">Review subscription</a><p style="margin:28px 0 0;font-size:13px;line-height:1.5">Link expires in 24 hours. Ignore this email if you did not request it.</p></td></tr></table></td></tr></table></body></html>`,
+    text: `Review and confirm your subscription to Kabil’s newsletter:\n${confirmationUrl}\n\nThis link expires in 24 hours. Ignore this email if you did not request it.`,
   });
   if (error) throw new Error("Confirmation email could not be sent");
   return "pending";
