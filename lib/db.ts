@@ -17,7 +17,8 @@ export function getDatabase(): Database {
     globalForDatabase.portfolioDatabase ??
     postgres(databaseUrl, {
       max: process.env.NODE_ENV === "production" ? 1 : 10,
-      idle_timeout: process.env.NODE_ENV === "production" ? 20 : 0,
+      idle_timeout: process.env.NODE_ENV === "production" ? 1 : 0,
+      max_lifetime: process.env.NODE_ENV === "production" ? 5 : null,
       prepare: false,
     });
 
