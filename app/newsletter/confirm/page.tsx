@@ -32,7 +32,8 @@ const confirmationContent = {
     marker: "—",
     code: "LINK UNAVAILABLE",
     title: "This link is done.",
-    message: "It may be invalid, expired, or already used. Request a fresh link from any post.",
+    message:
+      "It may be invalid, expired, or already used. Request a fresh link from any post.",
     link: "Request a new link",
   },
 } as const;
@@ -60,7 +61,6 @@ export default async function ConfirmNewsletterPage({
       <main className="newsletter-confirm" data-state={state} id="content">
         <section className="newsletter-confirm-card">
           <div className="newsletter-confirm-status" aria-hidden="true">
-            <span>MAIL OPS</span>
             <strong>{content.marker}</strong>
             <small>{content.code}</small>
           </div>
@@ -76,7 +76,11 @@ export default async function ConfirmNewsletterPage({
                 </Button>
               </form>
             )}
-            <Link className="newsletter-confirm-link" href="/blog" prefetch={false}>
+            <Link
+              className="newsletter-confirm-link"
+              href="/blog"
+              prefetch={false}
+            >
               {content.link}
             </Link>
           </div>
