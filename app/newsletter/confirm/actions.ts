@@ -10,7 +10,11 @@ export async function confirmNewsletter(formData: FormData) {
   if (typeof token === "string") {
     try {
       status = (await confirmSubscription(token)) ? "confirmed" : "invalid";
-    } catch {
+    } catch (cause) {
+      console.error(
+        "Newsletter confirmation failed:",
+        cause instanceof Error ? cause.message : "Unknown error",
+      );
       status = "error";
     }
   }

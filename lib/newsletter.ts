@@ -90,14 +90,18 @@ export async function confirmSubscription(token: string): Promise<boolean> {
       unsubscribed: false,
     });
     if (updated.error || !updated.data)
-      throw new Error("Subscriber could not be activated");
+      throw new Error(
+        `Subscriber could not be activated${updated.error ? `: ${updated.error.message}` : ""}`,
+      );
     contactId = updated.data.id;
     const segment = await client.contacts.segments.add({
       email: subscriber.email,
       segmentId: environment.segmentId,
     });
     if (segment.error)
-      throw new Error("Subscriber segment could not be activated");
+      throw new Error(
+        `Subscriber segment could not be activated: ${segment.error.message}`,
+      );
   }
 
   const result = await getDatabase()`
