@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import type { BlogPost, BlogPostMeta } from "@/lib/blog";
 import { parseBlogPost } from "@/lib/blog";
 import { getDatabase } from "@/lib/db";
@@ -65,6 +66,18 @@ export async function getBlogPost(slug: string): Promise<BlogPost | undefined> {
   `;
   return row ? parseBlogPost(`${slug}.md`, row.published_source) : undefined;
 }
+
+export const getCachedBlogPosts = unstable_cache(
+  getBlogPosts,
+  ["published-posts"],
+  { revalidate: 60, tags: ["posts"] },
+);
+
+export const getCachedBlogPost = unstable_cache(
+  getBlogPost,
+  ["published-post"],
+  { revalidate: 60, tags: ["posts"] },
+);
 
 export type AdminPostSummary = {
   slug: string;

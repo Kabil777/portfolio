@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { BlogIndexCard } from "@/components/blog/blog-index-card";
-import { getBlogPosts } from "@/lib/posts";
+import { getCachedBlogPosts } from "@/lib/posts";
 
 export const metadata: Metadata = {
   title: "Blog — Kabil Muthusamy",
@@ -8,10 +8,8 @@ export const metadata: Metadata = {
     "Posts on reliable data systems, Kubernetes, platform engineering, and SRE.",
 };
 
-export const dynamic = "force-dynamic";
-
 export default async function BlogPage() {
-  const posts = await getBlogPosts();
+  const posts = await getCachedBlogPosts();
   const categories = [...new Set(posts.map((post) => post.category))];
 
   return (

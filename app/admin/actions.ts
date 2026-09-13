@@ -2,7 +2,7 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/admin-auth";
 import { sendCampaign, sendTestCampaign } from "@/lib/campaigns";
 import { unsubscribe } from "@/lib/newsletter";
@@ -41,6 +41,7 @@ function slugFrom(formData: FormData): string {
 }
 
 function refreshPost(slug: string) {
+  revalidateTag("posts", { expire: 0 });
   revalidatePath("/");
   revalidatePath("/blog");
   revalidatePath(`/blog/${slug}`);

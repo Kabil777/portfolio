@@ -5,19 +5,21 @@ import { ArticleHeader } from "@/components/blog/article-header";
 import { ArticleRenderer } from "@/components/blog/article-renderer";
 import { ArticleToc } from "@/components/blog/article-toc";
 import { NewsletterSignup } from "@/components/blog/newsletter-signup";
-import { getBlogPost } from "@/lib/posts";
+import { getCachedBlogPost, getCachedBlogPosts } from "@/lib/posts";
 import { extractToc } from "@/lib/markdown";
 
 type BlogPostPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export const dynamic = "force-dynamic";
+export async function generateStaticParams() {
+  return (await getCachedBlogPosts()).map(({ slug }) => ({ slug }));
+}
 
 export async function generateMetadata({
   params,
 }: BlogPostPageProps): Promise<Metadata> {
-  const post = await getBlogPost((await params).slug);
+  const post = await getCachedBlogPost((await params).slug);
   if (!post) return {};
 
   return {
@@ -34,7 +36,7 @@ export async function generateMetadata({
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = await getBlogPost((await params).slug);
+  const post = await getCachedBlogPost((await params).slug);
   if (!post) notFound();
 
   const toc = extractToc(post.content);

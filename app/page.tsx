@@ -23,7 +23,7 @@ import {
   TerminalBuddy,
 } from "@/components/mascots";
 import { getSiteConfig } from "@/lib/config";
-import { getBlogPosts } from "@/lib/posts";
+import { getCachedBlogPosts } from "@/lib/posts";
 
 const { projects, experience, contact } = getSiteConfig();
 
@@ -108,10 +108,8 @@ function ToolMascotBadge({ tool }: { tool: ToolMascot }) {
   );
 }
 
-export const dynamic = "force-dynamic";
-
 export default async function Home() {
-  const latestPosts = await getBlogPosts(3);
+  const latestPosts = await getCachedBlogPosts(3);
 
   return (
     <>
@@ -244,7 +242,7 @@ export default async function Home() {
               <p>Ideas on data systems, Kubernetes, and reliable platforms.</p>
             </div>
             <Button asChild variant="outline">
-              <Link href="/blog" prefetch={false}>View all writing</Link>
+              <Link href="/blog">View all writing</Link>
             </Button>
           </div>
           <div className="home-blog-grid">
