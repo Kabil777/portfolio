@@ -18,7 +18,8 @@ export function ShareButton({
         await navigator.share({ title, text: description, url });
         return;
       } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") return;
+        if (error instanceof DOMException && error.name === "AbortError")
+          return;
       }
     }
 
@@ -38,7 +39,6 @@ export function ShareButton({
       type="button"
     >
       <Share2 aria-hidden="true" size={20} strokeWidth={3} />
-      <span>Share</span>
     </button>
   );
 }
