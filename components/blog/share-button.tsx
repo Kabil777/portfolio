@@ -19,9 +19,11 @@ export function ShareButton({
     function updateVisibility() {
       const current = window.scrollY;
       const nearTop = current < 120;
-      const nearBottom =
-        current + window.innerHeight >= document.documentElement.scrollHeight - 120;
-      setVisible(nearTop || nearBottom || current < previous);
+      const footer = document.querySelector("footer");
+      const footerVisible = footer
+        ? footer.getBoundingClientRect().top < window.innerHeight
+        : false;
+      setVisible(!footerVisible && (nearTop || current < previous));
       previous = current;
     }
 
