@@ -1430,6 +1430,15 @@ footer a {
   font-weight: 700;
   box-shadow: 4px 4px 0 var(--foreground);
   cursor: pointer;
+  transition:
+    opacity 150ms ease,
+    transform 150ms ease;
+}
+
+.article-share-button-hidden:not(:focus-visible) {
+  opacity: 0;
+  transform: translateY(calc(100% + 3rem));
+  pointer-events: none;
 }
 
 .article-share-button:hover {
@@ -1442,8 +1451,16 @@ footer a {
 }
 
 .article-share-button:focus-visible {
+  opacity: 1;
+  transform: none;
   outline: 3px solid var(--foreground);
   outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .article-share-button {
+    transition: none;
+  }
 }
 
 .article-layout {

@@ -1,6 +1,7 @@
 "use client";
 
 import { Share2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export function ShareButton({
@@ -10,6 +11,24 @@ export function ShareButton({
   title: string;
   description: string;
 }) {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    let previous = window.scrollY;
+
+    function updateVisibility() {
+      const current = window.scrollY;
+      const nearTop = current < 120;
+      const nearBottom =
+        current + window.innerHeight >= document.documentElement.scrollHeight - 120;
+      setVisible(nearTop || nearBottom || current < previous);
+      previous = current;
+    }
+
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    return () => window.removeEventListener("scroll", updateVisibility);
+  }, []);
+
   async function share() {
     const url = window.location.href;
 
@@ -34,7 +53,7 @@ export function ShareButton({
   return (
     <button
       aria-label="Share this post"
-      className="article-share-button"
+      className={`article-share-button${visible ? "" : " article-share-button-hidden"}`}
       onClick={share}
       type="button"
     >
