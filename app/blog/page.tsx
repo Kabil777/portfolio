@@ -2,10 +2,16 @@ import type { Metadata } from "next";
 import { BlogIndexCard } from "@/components/blog/blog-index-card";
 import { getCachedBlogPosts } from "@/lib/posts";
 
+const title = "Blog — Kabil Muthusamy";
+const description =
+  "Posts on reliable data systems, Kubernetes, platform engineering, and SRE.";
+
 export const metadata: Metadata = {
-  title: "Blog — Kabil Muthusamy",
-  description:
-    "Posts on reliable data systems, Kubernetes, platform engineering, and SRE.",
+  title,
+  description,
+  alternates: { canonical: "/blog" },
+  openGraph: { type: "website", url: "/blog", title, description },
+  twitter: { card: "summary_large_image", title, description },
 };
 
 export default async function BlogPage() {

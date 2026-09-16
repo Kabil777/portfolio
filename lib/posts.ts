@@ -187,3 +187,20 @@ export async function archivePost(slug: string): Promise<void> {
     WHERE slug = ${slug}
   `;
 }
+
+export async function deletePost(
+  slug: string,
+): Promise<"deleted" | "missing" | "scheduled"> {
+  return getDatabase().begin(async (transaction) => {
+    const [scheduled] = await transaction`
+      SELECT 1 FROM campaigns WHERE post_slug = ${slug} AND status = 'scheduled'
+    `;
+    if (scheduled) return "scheduled";
+
+    await transaction`DELETE FROM campaigns WHERE post_slug = ${slug}`;
+    const deleted = await transaction`
+      DELETE FROM posts WHERE slug = ${slug} RETURNING 1
+    `;
+    return deleted.length ? "deleted" : "missing";
+  });
+}

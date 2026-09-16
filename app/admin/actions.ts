@@ -8,6 +8,7 @@ import { sendCampaign, sendTestCampaign } from "@/lib/campaigns";
 import { unsubscribe } from "@/lib/newsletter";
 import {
   archivePost,
+  deletePost,
   publishPost,
   savePostDraft,
   unpublishPost,
@@ -99,6 +100,24 @@ export async function archivePostAction(formData: FormData) {
   await archivePost(slug);
   refreshPost(slug);
   redirect("/admin/posts");
+}
+
+export async function deletePostAction(formData: FormData) {
+  await authorizeMutation();
+  const slug = slugFrom(formData);
+  const result = await deletePost(slug);
+
+  if (result === "scheduled") {
+    redirect(
+      "/admin/posts?error=Cancel+the+scheduled+newsletter+before+deleting+this+post.",
+    );
+  }
+  if (result === "missing") {
+    redirect("/admin/posts?error=Post+was+not+found.");
+  }
+
+  refreshPost(slug);
+  redirect("/admin/posts?success=Post+deleted.");
 }
 
 export async function unsubscribeSubscriberAction(formData: FormData) {

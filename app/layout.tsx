@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/sonner";
+import { getSiteConfig } from "@/lib/config";
 import {
     Darker_Grotesque,
     JetBrains_Mono,
@@ -26,10 +27,27 @@ const publicSans = Public_Sans({
     display: "swap",
 });
 
+const title = "Kabil Muthusamy — Data, Platform & SRE";
+const description =
+    "Kabil Muthusamy builds reliable data systems, observable platforms, and calm operations.";
+
 export const metadata: Metadata = {
-    title: "Kabil Muthusamy — Data, Platform & SRE",
-    description:
-        "Kabil Muthusamy builds reliable data systems, observable platforms, and calm operations.",
+    metadataBase: new URL(getSiteConfig().site.url),
+    title,
+    description,
+    alternates: { canonical: "/" },
+    openGraph: {
+        type: "website",
+        url: "/",
+        siteName: "Kabil Muthusamy",
+        title,
+        description,
+    },
+    twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+    },
 };
 
 export default function RootLayout({

@@ -22,6 +22,7 @@ import {
 import { allowRequest } from "@/lib/rate-limit";
 import { secretHash } from "@/lib/security";
 import {
+  deletePost,
   getBlogPost,
   getPostPreview,
   publishPost,
@@ -43,6 +44,7 @@ process.env.RESEND_WEBHOOK_SECRET ??= "whsec_dGVzdHNlY3JldHRlc3RzZWNyZXQ=";
 
 const slug = "platform-integration-check";
 const secondSlug = "second-platform-integration-check";
+const deleteSlug = "delete-platform-integration-check";
 const subscriberEmail = "platform-check@example.com";
 const expiredSubscriberEmail = "expired-platform-check@example.com";
 const source = `---
@@ -99,10 +101,10 @@ after(async () => {
     await sql`DELETE FROM admin_sessions WHERE key_id = 'integration-test'`;
     await sql`DELETE FROM admin_challenges WHERE key_id = 'integration-test'`;
     await sql`DELETE FROM webhook_events WHERE id LIKE 'platform-check-%'`;
-    await sql`DELETE FROM campaigns WHERE post_slug = ${slug}`;
+    await sql`DELETE FROM campaigns WHERE post_slug IN (${slug}, ${deleteSlug})`;
     await sql`DELETE FROM subscribers WHERE email IN (${subscriberEmail}, ${expiredSubscriberEmail})`;
     await sql`DELETE FROM rate_limits WHERE action = 'platform-check'`;
-    await sql`DELETE FROM posts WHERE slug IN (${slug}, ${secondSlug})`;
+    await sql`DELETE FROM posts WHERE slug IN (${slug}, ${secondSlug}, ${deleteSlug})`;
   } finally {
     await closeDatabase();
   }
@@ -157,6 +159,25 @@ test("draft promotion preserves published content until explicit publish", async
   await unpublishPost(slug);
   assert.equal(await getBlogPost(slug), undefined);
   assert.equal(await publishPost(slug), true);
+});
+
+test("post deletion blocks scheduled campaigns and removes related data", async () => {
+  await savePostDraft(`${deleteSlug}.md`, source);
+  assert.equal(await publishPost(deleteSlug), true);
+  await getDatabase()`
+    INSERT INTO campaigns (post_slug, status, scheduled_at)
+    VALUES (${deleteSlug}, 'scheduled', now() + interval '1 hour')
+  `;
+
+  assert.equal(await deletePost(deleteSlug), "scheduled");
+  assert.ok(await getBlogPost(deleteSlug));
+
+  await getDatabase()`
+    UPDATE campaigns SET status = 'failed', scheduled_at = NULL
+    WHERE post_slug = ${deleteSlug}
+  `;
+  assert.equal(await deletePost(deleteSlug), "deleted");
+  assert.equal(await getBlogPost(deleteSlug), undefined);
 });
 
 test("analytics deduplicates daily visitors across posts", async () => {

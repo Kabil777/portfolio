@@ -1,11 +1,18 @@
 import Link from "next/link";
+import { DeletePostForm } from "@/components/admin/delete-post-form";
+import { FlashToasts } from "@/components/admin/flash-toasts";
 import { getAdminPosts } from "@/lib/posts";
 
-export default async function AdminPostsPage() {
-  const posts = await getAdminPosts();
+export default async function AdminPostsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string; success?: string }>;
+}) {
+  const [posts, result] = await Promise.all([getAdminPosts(), searchParams]);
 
   return (
     <section aria-labelledby="posts-title">
+      <FlashToasts error={result.error} success={result.success} />
       <div className="admin-page-heading">
         <div>
           <p className="admin-kicker">PUBLISHING</p>
@@ -54,12 +61,15 @@ export default async function AdminPostsPage() {
                     })}
                   </td>
                   <td>
-                    <Link
-                      href={`/admin/posts/${post.slug}/preview`}
-                      prefetch={false}
-                    >
-                      Preview
-                    </Link>
+                    <div className="admin-row-actions">
+                      <Link
+                        href={`/admin/posts/${post.slug}/preview`}
+                        prefetch={false}
+                      >
+                        Preview
+                      </Link>
+                      <DeletePostForm slug={post.slug} title={post.title} />
+                    </div>
                   </td>
                 </tr>
               ))}

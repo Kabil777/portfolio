@@ -5,6 +5,7 @@ import { ArticleHeader } from "@/components/blog/article-header";
 import { ArticleRenderer } from "@/components/blog/article-renderer";
 import { ArticleToc } from "@/components/blog/article-toc";
 import { NewsletterSignup } from "@/components/blog/newsletter-signup";
+import { ShareButton } from "@/components/blog/share-button";
 import { getCachedBlogPost, getCachedBlogPosts } from "@/lib/posts";
 import { extractToc } from "@/lib/markdown";
 
@@ -22,15 +23,27 @@ export async function generateMetadata({
   const post = await getCachedBlogPost((await params).slug);
   if (!post) return {};
 
+  const url = `/blog/${post.slug}`;
+  const images = post.cover ? [{ url: post.cover, alt: "" }] : undefined;
+
   return {
     title: `${post.title} — Kabil Muthusamy`,
     description: post.description,
+    alternates: { canonical: url },
     openGraph: {
       title: post.title,
       description: post.description,
       type: "article",
+      url,
       publishedTime: post.date,
       tags: post.tags,
+      images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images,
     },
   };
 }
@@ -44,6 +57,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   return (
     <main id="content">
       <ArticleAnalytics slug={post.slug} />
+      <ShareButton description={post.description} title={post.title} />
       <ArticleHeader post={post} showLike />
       <NewsletterSignup />
       <div

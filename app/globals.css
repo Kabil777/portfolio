@@ -1412,6 +1412,39 @@ footer a {
   box-shadow: 8px 8px 0 var(--foreground);
 }
 
+.article-share-button {
+  position: fixed;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  z-index: 45;
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.65rem 0.9rem;
+  border: 3px solid var(--foreground);
+  background: var(--secondary);
+  color: var(--foreground);
+  font-family: var(--font-public-sans), sans-serif;
+  font-weight: 700;
+  box-shadow: 4px 4px 0 var(--foreground);
+  cursor: pointer;
+}
+
+.article-share-button:hover {
+  background: var(--primary);
+}
+
+.article-share-button:active {
+  translate: 3px 3px;
+  box-shadow: 1px 1px 0 var(--foreground);
+}
+
+.article-share-button:focus-visible {
+  outline: 3px solid var(--foreground);
+  outline-offset: 4px;
+}
+
 .article-layout {
   display: grid;
   width: min(100%, 84rem);
@@ -2466,6 +2499,33 @@ footer a {
 .admin-table th {
   background: var(--ops-blue);
   font-weight: 700;
+}
+
+.admin-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.admin-row-actions form {
+  margin: 0;
+}
+
+.admin-main .admin-row-delete {
+  min-height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--destructive);
+  font-family: inherit;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+  box-shadow: none;
+}
+
+.admin-main .admin-row-delete:hover {
+  color: #991b1b;
 }
 
 .admin-status {
